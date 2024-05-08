@@ -1,6 +1,7 @@
 package com.calero.lili.api.services;
 
 
+import com.calero.lili.api.controllers.VtVentaReportPageDto;
 import com.calero.lili.api.dtos.vtVentas.*;
 import com.calero.lili.api.errors.exceptions.AlreadyExistsException;
 import com.calero.lili.api.errors.exceptions.NotFoundException;
@@ -14,6 +15,7 @@ import com.calero.lili.api.utils.DateUtils;
 import com.calero.lili.api.repositories.VtVentaDetalleRepository;
 import com.calero.lili.api.repositories.VtVentaRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -45,6 +47,7 @@ public class VtVentasServiceImpl {
     private final VtVentaRepository vtVentaRepository;
     private final VtVentaDetalleRepository vtVentaDetalleRepository;
     private final VtClientesRepository vtClientesRepository;
+    private final VtVentasMapper mapper;
 
     private static final Logger logger = LoggerFactory.getLogger(VtVentasServiceImpl.class);
 
@@ -134,33 +137,17 @@ public class VtVentasServiceImpl {
         return toResponse(vtVentaEntity, vtVentaEntity.getVentaDetalleEntities());
     }
 
-    public Page<VtVentaReportDto> findAllPaginate(String idData, String idEmpresa, VtVentaListFilterDto filters, Pageable pageable) {
-        // OJO SIEMPRE ENVIAR FECHAS
-
-        LocalDate fechaEmisionDesde = null;
-        LocalDate fechaEmisionHasta = null;
-        if (filters.getFechaEmisionDesde() !=null){
-            fechaEmisionDesde = DateUtils.toLocalDate(filters.getFechaEmisionDesde());
-        }
-        if (filters.getFechaEmisionHasta() !=null) {
-            fechaEmisionHasta = DateUtils.toLocalDate(filters.getFechaEmisionHasta());
-        }
-
-        System.out.println(fechaEmisionDesde);
-        System.out.println(fechaEmisionHasta);
-
-        Page<VtVentasProjection> page = vtVentaRepository.findAllPaginate(idData, idEmpresa, fechaEmisionDesde, fechaEmisionHasta, filters.getTipoVenta(),  filters.getSerie(), filters.getSecuencia(), pageable);
+    public VtVentaReportPageDto findAllPaginate(String idData, String idEmpresa, VtVentaListFilterDto filters, Pageable pageable) {
+        Page<VtVentasProjection> page = vtVentaRepository.findAllPaginate(idData, idEmpresa,
+                filters.getFechaEmisionDesde(), filters.getFechaEmisionHasta(), filters.getTipoVenta(),
+                filters.getSerie(), filters.getSecuencia(), pageable);
 
         // OJO SIN FECHAS y quitar en el repositorio el betwen
         //Page<VtFacturasProjection> page = vtVentaRepository.findAllPaginate(idData, idEmpresa, null, null, pageable);
 
-        return new PageImpl<>(
-                page.getContent()
-                        .stream()
-                        .map(this::projectionToDtoReport)
-                        .collect(Collectors.toList()),
-                page.getPageable(),
-                page.getTotalElements());
+        VtVenta
+
+        return vtVentaReportPageDto;
     }
 
 /*
@@ -186,69 +173,7 @@ public class VtVentasServiceImpl {
     }
 
     private VtVentaReportDto projectionToDtoReport(VtVentasProjection projection) {
-        VtVentaReportDto dto = new VtVentaReportDto();
-        dto.setIdSucursal(projection.getIdSucursal());
-        dto.setIdVenta(projection.getIdVenta());
-        dto.setTipoVenta(projection.getTipoVenta());
-        dto.setSerie(projection.getSerie());
-        dto.setSecuencia(projection.getSecuencia());
-        dto.setAutorizacionSri(projection.getAutorizacionSri());
-
-        dto.setIdCliente(projection.getIdCliente());
-        dto.setCliente(projection.getIdCliente());
-        dto.setNumeroIdentificacion(projection.getNumeroIdentificacion());
-        dto.setCliente(projection.getCliente());
-        dto.setNumeroIdentificacion(projection.getNumeroIdentificacion());
-        dto.setRelacionado(projection.getRelacionado());
-        dto.setTipoCliente(projection.getTipoCliente());
-        dto.setMail(projection.getMail());
-
-        dto.setFechaEmision(projection.getFechaEmision());
-        dto.setModificadaTipoVenta(projection.getModificadaTipoVenta());
-        dto.setModificadaSerie(projection.getModificadaSerie());
-        dto.setModificadaSecuencia(projection.getModificadaSecuencia());
-        dto.setConcepto(projection.getConcepto());
-        dto.setBaseCero(projection.getBaseCero());
-        dto.setBaseGravada1(projection.getBaseGravada1());
-        dto.setPorcentajeIva1(projection.getPorcentajeIva1());
-        dto.setIva1(projection.getIva1());
-        dto.setBaseGravada2(projection.getBaseGravada2());
-        dto.setPorcentajeIva2(projection.getPorcentajeIva2());
-        dto.setIva2(projection.getIva2());
-
-        dto.setBaseNoObjeto(projection.getBaseNoObjeto());
-
-        dto.setBaseExenta(projection.getBaseExenta());
-
-        dto.setTdscto(projection.getTdscto());
-        dto.setTdescuento(projection.getTdescuento());
-        dto.setTotal(projection.getTotal());
-        dto.setTipodoc(projection.getTipodoc());
-        dto.setTipo(projection.getTipo());
-        dto.setCodigoDocumento(projection.getCodigoDocumento());
-        dto.setItems(projection.getItems());
-        dto.setFechaVencimiento(projection.getFechaVencimiento());
-        dto.setFechaanu(projection.getFechaanu());
-        dto.setAgenteRetencion(projection.getAgenteRetencion());
-        dto.setContacto(projection.getContacto());
-        dto.setDiasCredito(projection.getDiasCredito());
-        dto.setCuotas(projection.getCuotas());
-        dto.setCzona(projection.getCzona());
-        dto.setTipoContribuyente(projection.getTipoContribuyente());
-        dto.setDocumentoElectronico(projection.getDocumentoElectronico());
-        dto.setTipoEmision(projection.getTipoEmision());
-        dto.setAmbiente(projection.getAmbiente());
-        dto.setEstadoDocumento(projection.getEstadoDocumento());
-        dto.setClaveAcceso(projection.getClaveAcceso());
-        dto.setFechaAutorizacion(projection.getFechaAutorizacion());
-        dto.setMensaje(projection.getMensaje());
-        dto.setXml(projection.getXml());
-        dto.setEmailEstado(projection.getEmailEstado());
-        //dto.setFormasPagoSri(projection.getFormasPagoSri());
-        dto.setIdVendedor(projection.getIdVendedor());
-        dto.setAnulada(projection.getAnulada());
-        dto.setImpresa(projection.getImpresa());
-        return dto;
+        return mapper.toDto(projection);
     }
 
     private VtVentaDetalleSummaryDto toDto(VtVentaDetalleProjection projection) {

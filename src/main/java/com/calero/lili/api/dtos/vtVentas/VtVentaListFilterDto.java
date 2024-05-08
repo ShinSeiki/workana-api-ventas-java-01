@@ -1,8 +1,10 @@
 package com.calero.lili.api.dtos.vtVentas;
 
+import com.calero.lili.api.utils.DateUtils;
 import lombok.Data;
 import lombok.ToString;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
@@ -17,6 +19,20 @@ public class VtVentaListFilterDto {
     private String fechaEmisionHasta;
     private String numeroIdentificacion;
     private String claveAcceso;
+
+    public LocalDate getFechaEmisionDesde() {
+        if(fechaEmisionDesde == null)
+            return null;
+        return DateUtils.toLocalDate(fechaEmisionDesde);
+    }
+
+    public LocalDate getFechaEmisionHasta() {
+        if(fechaEmisionHasta == null)
+            return null;
+        return DateUtils.toLocalDate(fechaEmisionHasta);
+    }
+
+
     /*
     private String autorizacionSri;
     private Timestamp fechaEmision;

@@ -98,7 +98,7 @@ public class VtVentasController {
 
     @GetMapping("facturas/{idData}/{idEmpresa}")
     @ResponseStatus(code = HttpStatus.OK)
-    public Page<VtVentaReportDto> findAllVentasPaginate(@PathVariable("idData") String idData,
+    public VtVentaReportPageDto findAllVentasPaginate(@PathVariable("idData") String idData,
                                           @PathVariable("idEmpresa") String idEmpresa,
                                           VtVentaListFilterDto filters,
                                           Pageable pageable) {
