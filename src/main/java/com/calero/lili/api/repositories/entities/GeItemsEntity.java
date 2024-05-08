@@ -20,6 +20,12 @@ import java.util.UUID;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class GeItemsEntity {
 
+    @Column(name = "id_data")
+    private String idData;
+
+    @Column(name = "id_empresa")
+    private String idEmpresa;
+
     @Id
     @Column(name = "id_item")
     private UUID idItem;
@@ -27,14 +33,51 @@ public class GeItemsEntity {
     @Column(name = "codigo_item")
     private String codigoItem;
 
+    @Column(name = "codigo_barras")
+    private String codigoBarras;
+
     @Column(name = "item")
     private String item;
 
+
+//    @Column(name = "cmarca")
+//    private String cmarca;
+
+    //@Column(name = "id_medida")
+    //private int idMedida;
+
+//    @Column(name = "id_grupo")
+//    private Integer idGrupo;
+
     @OneToMany(mappedBy = "item") // NOMBRE DE LA RELACION viene de la TABLA SECUNDARIA
-    private List<VtVentaDetalleEntity> vtFacturaDetalleEntities = new ArrayList<>();
+    private List<VtVentaDetalleEntity> vtVentaDetalleEntities = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_items_impuestos") // NOMBRE DEL CAMPO RELACIONADO, PONER EL MIMO NOMBRE QUE TIENE LA TABLA PRINCIPAL
-    private GeItemsImpuestosEntity geItemsImpuestosEntity; // NOMBRE DE LA RELACION, ESTE VA EN LA TABLA PRINCIPAL
+    // Clase interna para encapsular el detalle adicional
 
+    @Type(type = "jsonb")
+    @Column(columnDefinition = "jsonb")
+    private List<DetalleAdicional> detallesAdicionales;
+
+    @Type(type = "jsonb")
+    @Column(columnDefinition = "jsonb")
+    private List<Impuesto> impuestos;
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class DetalleAdicional {
+        private String nombre;
+        @Column(length = 300)
+        private String valor;
+    }
+
+    // arriba comentado el campo impuestos jsonb
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class Impuesto {
+        private String impuesto;
+        private String codigo;
+        private String porcentaje;
+    }
 }

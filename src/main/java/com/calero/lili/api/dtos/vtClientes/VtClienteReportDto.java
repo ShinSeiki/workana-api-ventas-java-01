@@ -13,8 +13,23 @@ public class VtClienteReportDto {
 
     private String cliente;
 
+    private String tipoIdentificacion;
+
     private String numeroIdentificacion;
 
+    private String web;
+
+    private String observaciones;
+
     private UUID idGrupo;
+
+    private List<VtClientesEntity.Direccion> direcciones;
+
+    //private String direcciones;
+//    private String ciudad;
+//    private String contacto;
+//    private String email;
+//    private String telefonos;
+
 
 }

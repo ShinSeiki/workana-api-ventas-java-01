@@ -11,7 +11,15 @@ public class GeItemCreationRequestDto {
 
     private UUID idItem;
     private String codigoItem;
+    private String codigoBarras;
     private String item;
+    private String cmarca;
+    private String cmedida;
     private Integer idGrupo;
 
+    private List<GeItemsEntity.DetalleAdicional> detallesAdicionales;
+    private List<GeItemsEntity.Impuesto> impuestos;
+
+    // lista items
+    private String codigoIva;
 }

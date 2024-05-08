@@ -9,6 +9,7 @@ import java.util.UUID;
 public class VtVentaCreationResponseDto {
 
     private UUID idFactura;
+    private BigDecimal iva;
     private BigDecimal descuento;
     private BigDecimal total;
 

@@ -8,8 +8,13 @@ import java.util.UUID;
 @Data
 public class VtVentaCreationRequestClienteDto {
 
-    private UUID idCliente;
     private String cliente;
+    private String tipoIdentificacion;
     private String numeroIdentificacion;
+    private String telefonos;
+    private String direccion;
+    private String tipoCliente;
+    private String relacionado;
+    private String email;
 
 }

@@ -7,6 +7,6 @@ import java.util.List;
 @Data
 public class VtClienteListCreationRequestDto {
 
-    private List<VtClienteListCreationRequestDetailDto> listaClientes;
+    private List<VtClienteCreationRequestDto> listaClientes;
 
 }

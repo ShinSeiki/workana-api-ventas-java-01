@@ -15,7 +15,7 @@
 	<description>Software Contabilidad</description>
 	<properties>
 		<java.version>11</java.version>
-		<local.repository.folder>${pom.basedir}/libs/</local.repository.folder>
+<!--		<local.repository.folder>${pom.basedir}/libs/</local.repository.folder>-->
 	</properties>
 	<dependencies>
 		<dependency>
@@ -60,11 +60,11 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.boot</groupId>-->
+<!--			<artifactId>spring-boot-starter-test</artifactId>-->
+<!--			<scope>test</scope>-->
+<!--		</dependency>-->
 
 		<dependency>
 			<groupId>com.sun.xml.ws</groupId>
@@ -97,9 +97,15 @@
 			<version>5.2.3</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>itextpdf</artifactId>
+			<version>5.5.13.2</version>
+		</dependency>
 
 
-		<!-- Para campos json -->
+
+<!--		 Para campos json -->
 		<dependency>
 			<groupId>com.vladmihalcea</groupId>
 			<artifactId>hibernate-types-52</artifactId>
@@ -107,25 +113,121 @@
 		</dependency>
 
 		<!-- SLF4J Logging -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.slf4j</groupId>-->
+<!--			<artifactId>slf4j-api</artifactId>-->
+<!--		</dependency>-->
 
 		<!-- Logback -->
+<!--		<dependency>-->
+<!--			<groupId>ch.qos.logback</groupId>-->
+<!--			<artifactId>logback-classic</artifactId>-->
+<!--		</dependency>-->
+
+		<!-- SEGURIDAD-->
 		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>0.11.5</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>0.11.5</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId>
+			<version>0.11.5</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- SEGURIDAD -->
 
 
+<!--		mvn install:install-file -Dfile=MITyCLibAPI-1.0.4.jar -DgroupId=es.mityc.jumbo.adsi -DartifactId=MITyCLibAPI -Dversion=1.0.4 -Dpackaging=jar-->
+<!--		mvn install:install-file -Dfile=MITyCLibCert-1.0.4.jar -DgroupId=es.mityc.jumbo.adsi -DartifactId=MITyCLibCert -Dversion=1.0.4 -Dpackaging=jar-->
+<!--		mvn install:install-file -Dfile=MITyCLibOCSP-1.0.4.jar -DgroupId=es.mityc.jumbo.adsi -DartifactId=MITyCLibOCSP  -Dversion=1.0.4 -Dpackaging=jar-->
+<!--		mvn install:install-file -Dfile=MITyCLibPolicy-1.0.4.jar -DgroupId=es.mityc.jumbo.adsi -DartifactId=MITyCLibPolicy -Dversion=1.0.4 -Dpackaging=jar-->
+<!--		mvn install:install-file -Dfile=MITyCLibTrust-1.0.4.jar -DgroupId=es.mityc.jumbo.adsi -DartifactId=MITyCLibTrust -Dversion=1.0.4 -Dpackaging=jar-->
+<!--		mvn install:install-file -Dfile=MITyCLibTSA-1.0.4.jar -DgroupId=es.mityc.jumbo.adsi -DartifactId=MITyCLibTSA -Dversion=1.0.4 -Dpackaging=jar-->
+<!--		mvn install:install-file -Dfile=MITyCLibXADES-1.0.4.jar -DgroupId=es.mityc.jumbo.adsi -DartifactId=MITyCLibXADES -Dversion=1.0.4 -Dpackaging=jar-->
+
+<!--		mvn install:install-file -Dfile=xmlsec-1.4.2-ADSI-1.0.jar -DgroupId=es.mityc.jumbo.adsi -DartifactId=xmlsec-1.4.2-ADSI -Dversion=1.0 -Dpackaging=jar-->
+
+
+<!--		<dependency>-->
+<!--			<groupId>es.mityc.jumbo.adsi</groupId>-->
+<!--			<artifactId>MITyCLibAPI</artifactId>-->
+<!--			<version>1.1.7</version>-->
+<!--			<scope>system</scope>-->
+<!--			<systemPath>${project.basedir}/libs/MITyCLibAPI-1.1.7.jar</systemPath>-->
+<!--		</dependency>-->
+<!--		<dependency>-->
+<!--			<groupId>es.mityc.jumbo.adsi</groupId>-->
+<!--			<artifactId>MITyCLibCert</artifactId>-->
+<!--			<version>1.1.7</version>-->
+<!--			<scope>system</scope>-->
+<!--			<systemPath>${project.basedir}/libs/MITyCLibCert-1.1.7.jar</systemPath>-->
+<!--		</dependency>-->
+<!--		<dependency>-->
+<!--			<groupId>es.mityc.jumbo.adsi</groupId>-->
+<!--			<artifactId>MITyCLibOCSP</artifactId>-->
+<!--			<version>1.1.7</version>-->
+<!--			<scope>system</scope>-->
+<!--			<systemPath>${project.basedir}/libs/MITyCLibOCSP-1.1.7.jar</systemPath>-->
+<!--		</dependency>-->
+<!--		<dependency>-->
+<!--			<groupId>es.mityc.jumbo.adsi</groupId>-->
+<!--			<artifactId>MITyCLibTrust</artifactId>-->
+<!--			<version>1.1.7</version>-->
+<!--			<scope>system</scope>-->
+<!--			<systemPath>${project.basedir}/libs/MITyCLibTrust-1.1.7.jar</systemPath>-->
+<!--		</dependency>-->
+<!--		<dependency>-->
+<!--			<groupId>es.mityc.jumbo.adsi</groupId>-->
+<!--			<artifactId>MITyCLibTSA</artifactId>-->
+<!--			<version>1.0.4</version>-->
+<!--			<scope>system</scope>-->
+<!--			<systemPath>${project.basedir}/libs/MITyCLibTSA-1.1.7.jar</systemPath>-->
+<!--		</dependency>-->
+<!--		<dependency>-->
+<!--			<groupId>es.mityc.jumbo.adsi</groupId>-->
+<!--			<artifactId>MITyCLibXADES</artifactId>-->
+<!--			<version>1.0.4</version>-->
+<!--			<scope>system</scope>-->
+<!--			<systemPath>${project.basedir}/libs/MITyCLibXADES-1.1.7.jar</systemPath>-->
+<!--		</dependency>-->
+<!--		<dependency>-->
+<!--			<groupId>es.mityc.jumbo.adsi</groupId>-->
+<!--			<artifactId>xmlsec-1.4.2-ADSI</artifactId>-->
+<!--			<version>1.0</version>-->
+<!--			<scope>system</scope>-->
+<!--			<systemPath>${project.basedir}/libs/xmlsec-1.4.2-ADSI-1.1.jar</systemPath>-->
+<!--		</dependency>-->
+		<!--		<dependency>-->
+		<!--			<groupId>es.mityc.jumbo.adsi</groupId>-->
+		<!--			<artifactId>MITyCLibPolicy</artifactId>-->
+		<!--			<version>1.1.7</version>-->
+		<!--		</dependency>-->
 
 	</dependencies>
-
-	<!-- https://mvnrepository.com/artifact/io.awspring.cloud/spring-cloud-aws-dependencies -->
-
-
 
 	<build>
 		<plugins>
@@ -141,11 +243,113 @@
 					</excludes>
 				</configuration>
 			</plugin>
-
-
-
+<!--			<plugin>-->
+<!--				<groupId>com.google.cloud.tools</groupId>-->
+<!--				<artifactId>appengine-maven-plugin</artifactId>-->
+<!--				<version>2.4.4</version>-->
+<!--			</plugin>-->
 
 		</plugins>
 	</build>
 
+	<!--
+	<repositories>
+		<repository>
+			<id>local-maven-repository</id>
+			<url>file://${local.repository.folder}</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+-->
 </project>
+
+
+		<!-- Signer -->
+		<!--
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcmail-jdk15</artifactId>
+			<version>1.43</version>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk15on</artifactId>
+			<version>1.61</version>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bctsp-jdk15</artifactId>
+			<version>1.43</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.11</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.9</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>xalan</groupId>
+			<artifactId>serializer</artifactId>
+			<version>2.7.1</version>
+		</dependency>
+		<dependency>
+			<groupId>es.mityc.jumbo.adsi</groupId>
+			<artifactId>MITyCLibAPI</artifactId>
+			<version>1.0.4</version>
+		</dependency>
+		<dependency>
+			<groupId>es.mityc.jumbo.adsi</groupId>
+			<artifactId>MITyCLibCert</artifactId>
+			<version>1.0.4</version>
+		</dependency>
+		<dependency>
+			<groupId>es.mityc.jumbo.adsi</groupId>
+			<artifactId>MITyCLibOCSP</artifactId>
+			<version>1.0.4</version>
+		</dependency>
+		<dependency>
+			<groupId>es.mityc.jumbo.adsi</groupId>
+			<artifactId>MITyCLibPolicy</artifactId>
+			<version>1.0.4</version>
+		</dependency>
+		<dependency>
+			<groupId>es.mityc.jumbo.adsi</groupId>
+			<artifactId>MITyCLibTrust</artifactId>
+			<version>1.0.4</version>
+		</dependency>
+		<dependency>
+			<groupId>es.mityc.jumbo.adsi</groupId>
+			<artifactId>MITyCLibTSA</artifactId>
+			<version>1.0.4</version>
+		</dependency>
+		<dependency>
+			<groupId>es.mityc.jumbo.adsi</groupId>
+			<artifactId>MITyCLibXADES</artifactId>
+			<version>1.0.4</version>
+		</dependency>
+		<dependency>
+			<groupId>es.mityc.jumbo.adsi</groupId>
+			<artifactId>xmlsec-1.4.2-ADSI</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mozilla</groupId>
+			<artifactId>jss</artifactId>
+			<version>4.2.5</version>
+		</dependency>
+		-->
+		<!-- Signer -->

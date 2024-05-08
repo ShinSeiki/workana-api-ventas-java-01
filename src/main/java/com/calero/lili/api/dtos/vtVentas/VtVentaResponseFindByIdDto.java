@@ -15,13 +15,22 @@ public class VtVentaResponseFindByIdDto {
     private UUID idVenta;
 
     private String fechaEmision;
+    private String serie;
     private String secuencia;
 
     private String idCliente;
     private String numeroIdentificacion;
+    private String telefonos;
+    private List<String> emails;
 
     private BigDecimal subtotal;
     private BigDecimal descuento;
+
+    private BigDecimal baseCero;
+    private BigDecimal baseGravada;
+    private BigDecimal iva;
+    private BigDecimal baseExenta;
+    private BigDecimal baseNoObjeto;
 
     private List<VtVentaDetalleResponseDto> vtVentaDetalleResponseDtos;
 

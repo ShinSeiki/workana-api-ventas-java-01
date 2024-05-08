@@ -9,6 +9,7 @@ import java.util.UUID;
 public class VtVentaDetalleSummaryDto {
 
     private UUID idVenta;
+    private String serie;
     private String secuencia;
     private String idCliente;
     private String cliente;

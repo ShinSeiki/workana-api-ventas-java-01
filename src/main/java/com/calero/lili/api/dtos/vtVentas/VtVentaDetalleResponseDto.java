@@ -15,6 +15,7 @@ public class VtVentaDetalleResponseDto {
     private String item;
     private BigDecimal precioUnitario;
     private BigDecimal cantidad;
+    private BigDecimal taxAmount;
     private BigDecimal descuento;
     private BigDecimal subTotal;
 
