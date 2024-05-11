@@ -8,11 +8,6 @@ import org.mapstruct.Mapping;
 
 @Mapper
 public interface VtVentasMapper {
-    @Mapping(target = "id", source = "idSucursal")
-    @Mapping(target = "id", source = "idSucursal")
-    @Mapping(target = "id", source = "idSucursal")
-    @Mapping(target = "id", source = "idSucursal")
-    @Mapping(target = "id", source = "idSucursal")
     VtVentaReportDto toDto(VtVentasProjection vtVentasProjection);
 
     @InheritInverseConfiguration

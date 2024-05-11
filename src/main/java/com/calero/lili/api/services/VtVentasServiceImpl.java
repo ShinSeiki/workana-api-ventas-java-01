@@ -9,11 +9,15 @@ import com.calero.lili.api.repositories.VtClientesRepository;
 import com.calero.lili.api.repositories.entities.*;
 import com.calero.lili.api.repositories.projections.VtVentaDetalleProjection;
 import com.calero.lili.api.repositories.projections.VtVentasProjection;
-import com.calero.lili.api.specification.VtVentasFilterSpecification;
-import com.calero.lili.api.specification.VtVentasSpecification;
 import com.calero.lili.api.utils.DateUtils;
 import com.calero.lili.api.repositories.VtVentaDetalleRepository;
 import com.calero.lili.api.repositories.VtVentaRepository;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Phrase;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.data.domain.Page;
@@ -22,9 +26,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.*;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -40,6 +49,8 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletResponse;
+
 @Service
 @RequiredArgsConstructor
 public class VtVentasServiceImpl {
@@ -47,7 +58,7 @@ public class VtVentasServiceImpl {
     private final VtVentaRepository vtVentaRepository;
     private final VtVentaDetalleRepository vtVentaDetalleRepository;
     private final VtClientesRepository vtClientesRepository;
-    private final VtVentasMapper mapper;
+//    private final VtVentasMapper mapper;
 
     private static final Logger logger = LoggerFactory.getLogger(VtVentasServiceImpl.class);
 
@@ -145,9 +156,8 @@ public class VtVentasServiceImpl {
         // OJO SIN FECHAS y quitar en el repositorio el betwen
         //Page<VtFacturasProjection> page = vtVentaRepository.findAllPaginate(idData, idEmpresa, null, null, pageable);
 
-        VtVenta
 
-        return vtVentaReportPageDto;
+        return null;
     }
 
 /*
@@ -173,7 +183,7 @@ public class VtVentasServiceImpl {
     }
 
     private VtVentaReportDto projectionToDtoReport(VtVentasProjection projection) {
-        return mapper.toDto(projection);
+        return null;
     }
 
     private VtVentaDetalleSummaryDto toDto(VtVentaDetalleProjection projection) {
@@ -497,112 +507,76 @@ public class VtVentasServiceImpl {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    /**
-     * Busca facturas según un conjunto de criterios de filtrado.
-     *
-     * Utiliza el patrón "Specification" para construir la consulta.
-     *
-     * @param filter Criterios de filtrado.
-     * @return Optional<List<VtFacturaEntity>> Lista de facturas encontradas.
-     */
-    public Optional<List<VtVentaEntity>> findFacturasWithSpecification(VtVentasFilterSpecification filter, Pageable pageable) {
-        try {
-            logger.info("Iniciando la búsqueda de facturas con los siguientes filtros: {}", filter);
-            Specification<VtVentaEntity> spec = VtVentasSpecification.buildFromFilter(filter);
-            List<VtVentaEntity> facturas = vtVentaRepository.findAll(spec);
-            if (facturas.isEmpty()) {
-                logger.warn("No se encontraron facturas con los filtros proporcionados.");
-            } else {
-                logger.info("Se encontraron {} facturas con los filtros proporcionados.", facturas.size());
+    public void exportarFacturasPDF(HttpServletResponse response, String idData, String idEmpresa, VtVentaListFilterDto filters) throws DocumentException, IOException {
+        List<VtVentasProjection> facturas = vtVentaRepository.findAll(idData, idEmpresa, filters.getFechaEmisionDesde(), filters.getFechaEmisionHasta(), filters.getTipoVenta(),  filters.getSerie(), filters.getSecuencia());
+
+        response.setContentType("application/pdf");
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=facturas_" + LocalDateTime.now() + ".pdf";
+        response.setHeader(headerKey, headerValue);
+
+        // Obtener las facturas según el filtro
+//        Optional<List<VtVentaEntity>> optionalFacturas = findFacturasWithSpecification(filter, PageRequest.of(0, Integer.MAX_VALUE));
+
+        if (!facturas.isEmpty()) {
+            System.out.println("No esta vacio");
+//            List<VtVentaEntity> facturas = optionalFacturas.get();
+
+            // Iniciar el documento PDF
+            Document document = new Document();
+            PdfWriter.getInstance(document, response.getOutputStream());
+            document.open();
+
+            // Crear la tabla y los encabezados del PDF
+            PdfPTable table = new PdfPTable(13); // Número de columnas
+            table.setWidthPercentage(100);
+            table.setSpacingBefore(10f);
+            table.setSpacingAfter(10f);
+
+            // definimos los nombres de las columnas, excluyendo el campo XML
+            String[] columnNames = { "ID", "ID Data", "ID Empresa", "Serie", "Secuencia", "Fecha Emisión", "Clave Acceso", "Tipo Venta", "Subtotal", "Total Descuento", "Base Cero", "Base Gravada", "Totales" };
+
+            // Añadir columnas
+            for (String columnName : columnNames) {
+                PdfPCell header = new PdfPCell();
+                header.setBackgroundColor(Color.LIGHT_GRAY);
+                header.setBorderWidth(1);
+                header.setPhrase(new Phrase(columnName));
+                table.addCell(header);
             }
-            return Optional.of(facturas);
-        } catch (Exception e) {
-            logger.error("Error durante la búsqueda de facturas: ", e);
-            return Optional.empty();
-        }
-    }
 
-    /**
-     * Busca detalles de facturas según un conjunto de criterios de filtrado.
-     *
-     * Utiliza el patrón "Specification" para construir la consulta.
-     *
-     * @param filter Criterios de filtrado.
-     * @return Optional<List<VtFacturaDetalleEntity>> Lista de detalles de facturas encontradas.
-     */
-    public Optional<List<VtVentaDetalleEntity>> findFacturaDetailsWithSpecification(VtVentasFilterSpecification filter) {
-        try {
-            logger.info("Iniciando la búsqueda de detalles de factura con los siguientes filtros: {}", filter);
-            Specification<VtVentaDetalleEntity> spec = VtVentasSpecification.buildFromFilterForDetails(filter);
-            List<VtVentaDetalleEntity> detalles = vtVentaDetalleRepository.findAll(spec);
-            if (detalles.isEmpty()) {
-                logger.warn("No se encontraron detalles de factura con los filtros proporcionados.");
-            } else {
-                logger.info("Se encontraron {} detalles de factura con los filtros proporcionados.", detalles.size());
+            // Añadir filas con los datos de las facturas
+            for (VtVentasProjection factura : facturas) {
+                System.out.println("Agregando los registros de cada fila");
+                table.addCell(factura.getIdVenta().toString());
+                table.addCell(factura.getSerie());
+                table.addCell(factura.getSecuencia());
+                table.addCell(factura.getFechaEmision().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+                //  table.addCell(factura.getClaveAcceso());
+                table.addCell(factura.getTipoVenta());
+//                table.addCell(String.valueOf(factura.getSubtotal()));
+//                table.addCell(String.valueOf(factura.getTotalDescuento()));
+//                table.addCell(String.valueOf(factura.getBaseCero()));
+//                table.addCell(String.valueOf(factura.getBaseGravada()));
+                //table.addCell(String.valueOf(factura.getTotales()));
             }
-            return Optional.ofNullable(detalles);
-        } catch (Exception e) {
-            logger.error("Error durante la búsqueda de detalles de factura: ", e);
-            return Optional.empty();
+
+            // Añadir la tabla al documento y cerrar
+            document.add(table);
+            document.close();
+        } else {
+            // Manejar el caso en el que no se encuentren facturas
+            try {
+                OutputStream os = response.getOutputStream();
+                os.write("No se encontraron facturas con los filtros proporcionados".getBytes());
+                os.flush();
+                os.close();
+            } catch (IOException e) {
+                logger.error("Error al escribir el archivo PDF", e);
+            }
+
         }
     }
-
-    /**
-     * Calcula los totales de facturas según un conjunto de criterios de filtrado.
-     *
-     * Utiliza el patrón "Specification" para construir la consulta.
-     *
-     * @param filter Criterios de filtrado.
-     * @return Optional<Map<String, BigDecimal>> Mapa con los totales calculados.
-     */
-    public Optional<Map<String, BigDecimal>> calculateInvoiceTotalsWithSpecification(VtVentasFilterSpecification filter) {
-        try {
-            logger.info("Calculando totales de facturas con los siguientes filtros: {}", filter);
-            Specification<VtVentaEntity> spec = VtVentasSpecification.buildFromFilter(filter);
-            List<VtVentaEntity> facturas = vtVentaRepository.findAll(spec);
-
-            //  BigDecimal totalDescuento = facturas.stream().map(VtVentaEntity::getTotalDescuento).reduce(BigDecimal.ZERO, BigDecimal::add);
-            // BigDecimal totalSubtotal = facturas.stream().map(VtVentaEntity::getSubtotal).reduce(BigDecimal.ZERO, BigDecimal::add);
-
-            Map<String, BigDecimal> totales = new HashMap<>();
-            // totales.put("totalDescuento", totalDescuento);
-            // totales.put("totalSubtotal", totalSubtotal);
-
-            return Optional.of(totales);
-        } catch (Exception e) {
-            logger.error("Error durante el cálculo de totales de facturas: ", e);
-            return Optional.empty();
-        }
-    }
-
-    /**
-     * Calcula los totales de los detalles de facturas según un conjunto de criterios de filtrado.
-     *
-     * Utiliza el patrón "Specification" para construir la consulta.
-     *
-     * @param filter Criterios de filtrado.
-     * @return Optional<Map<String, BigDecimal>> Mapa con los totales calculados.
-     */
-    public Optional<Map<String, BigDecimal>> calculateInvoiceDetailsTotalsWithSpecification(VtVentasFilterSpecification filter) {
-        try {
-            logger.info("Calculando totales de detalles de factura con los siguientes filtros: {}", filter);
-            Specification<VtVentaDetalleEntity> spec = VtVentasSpecification.buildFromFilterForDetails(filter);
-            List<VtVentaDetalleEntity> detalles = vtVentaDetalleRepository.findAll(spec);
-
-            BigDecimal totalDescuento = detalles.stream().map(VtVentaDetalleEntity::getDescuento).reduce(BigDecimal.ZERO, BigDecimal::add);
-            BigDecimal totalSubtotal = detalles.stream().map(detail -> detail.getPrecioUnitario().multiply(detail.getCantidad()).subtract(detail.getDescuento())).reduce(BigDecimal.ZERO, BigDecimal::add);
-
-            Map<String, BigDecimal> totales = new HashMap<>();
-            totales.put("totalDescuento", totalDescuento);
-            totales.put("totalSubtotal", totalSubtotal);
-
-            return Optional.of(totales);
-        } catch (Exception e) {
-            logger.error("Error durante el cálculo de totales de detalles de factura: ", e);
-            return Optional.empty();
-        }
-    }
-
 
 
 }
