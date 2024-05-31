@@ -2,6 +2,7 @@ package com.calero.lili.auth;
 
 import java.util.Arrays;
 
+import com.calero.lili.auth.filters.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +21,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import com.calero.lili.auth.filters.JwtAuthenticationFilter;
 import com.calero.lili.auth.filters.JwtValidationFilter;
 
 @Configuration
@@ -39,54 +39,22 @@ public class SpringSecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    /*
-    // para la version 17 activar esto:
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests()
-                .requestMatchers(HttpMethod.GET, "/users", "/users/page").permitAll()
-                .requestMatchers(HttpMethod.GET, "/users/{id}").hasAnyRole("USER", "ADMIN")
-                .requestMatchers(HttpMethod.POST, "/users").hasRole("ADMIN")
-                .requestMatchers("/users/**").hasRole("ADMIN")
-                // .requestMatchers(HttpMethod.DELETE, "/users/{id}").hasRole("ADMIN")
-                // .requestMatchers(HttpMethod.PUT, "/users/{id}").hasRole("ADMIN")
-                .anyRequest().authenticated()
-                .and()
-                .addFilter(new JwtAuthenticationFilter(authenticationConfiguration.getAuthenticationManager()))
-                .addFilter(new JwtValidationFilter(authenticationConfiguration.getAuthenticationManager()))
-                .csrf(config -> config.disable())
-                .sessionManagement(managment -> managment.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .build();
-    }
-     */
-
-
-    // esto es para la version 8 u 11
-    @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http.authorizeHttpRequests()
-
-                .antMatchers(HttpMethod.GET, "/apist/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/apist/**").permitAll()
-
-                .antMatchers(HttpMethod.POST, "/login").permitAll()
+//                .requestMatchers(HttpMethod.GET, "/api/v1.0/datas", "/api/v1.0/datas/page/{page}").permitAll()
+//                .requestMatchers(HttpMethod.GET, "/api/v1.0/datas/{id}").hasAnyRole("USER", "ADMIN")
+//                .requestMatchers(HttpMethod.POST, "/api/v1.0/datas").hasRole("ADMIN")
+//                .requestMatchers("/api/v1.0/datas/**").hasRole("ADMIN")
+//                 .requestMatchers(HttpMethod.DELETE, "/api/v1.0/datas/{id}").hasRole("ADMIN")
+//                 .requestMatchers(HttpMethod.PUT, "/api/v1.0/datas/{id}").hasRole("ADMIN")
 
                 // esto permite todo
-                .antMatchers(HttpMethod.GET, "/api/v1.0/**").permitAll()
-                .antMatchers(HttpMethod.DELETE, "/api/v1.0/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/v1.0/**").permitAll()
-                .antMatchers(HttpMethod.PUT, "/api/v1.0/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1.0/**").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/api/v1.0/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1.0/**").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/api/v1.0/**").permitAll()
 
-                .antMatchers(HttpMethod.GET, "/api/v1.0/users").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST, "/api/v1.0/users").hasRole("ADMIN")
-
-                //.antMatchers("/api/**").hasRole("ADMIN")
-
-                //.antMatchers(HttpMethod.DELETE, "/api/v1.0/recibidos/{id}").hasAnyRole("USER", "ADMIN")
-
-                // .requestMatchers(HttpMethod.DELETE, "/users/{id}").hasRole("ADMIN")
-                // .requestMatchers(HttpMethod.PUT, "/users/{id}").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JwtAuthenticationFilter(authenticationConfiguration.getAuthenticationManager()))

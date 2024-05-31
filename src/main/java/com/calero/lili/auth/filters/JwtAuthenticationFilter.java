@@ -1,21 +1,18 @@
 package com.calero.lili.auth.filters;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-import com.calero.lili.auth.TokenJwtConfig;
+import com.calero.lili.api.repositories.UsuarioRepository;
+import com.calero.lili.api.repositories.entities.AdUsuario;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-
-import com.calero.lili.api.repositories.entities.adUsuario;
 
 import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.databind.DatabindException;
@@ -23,29 +20,38 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import static com.calero.lili.auth.TokenJwtConfig.*;
 
+// AQUI EXTENDEMOS DE UsernamePasswordAuthenticationFilter Y EN ESA CLASE INDICA CUAL ES EL ENDPOINT PARA LOGEARSE
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private AuthenticationManager authenticationManager;
+
+//    private UsuarioRepository repository;
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
 
+    // AQUI INGRESA CUANDO INTENTA AUTENTICAR
+    // request CONTTIENE LOS DATOS DE INICIO DE SESION
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
 
-        adUsuario user = null;
+        AdUsuario user = null;
         String username = null;
         String password = null;
 
         try {
-            user = new ObjectMapper().readValue(request.getInputStream(), adUsuario.class);
+            // CREAMOS EL OBJETO USER Y LO LLENAMOS CON LOS DATOS DEL REQUEST
+            user = new ObjectMapper().readValue(request.getInputStream(), AdUsuario.class);
+
+            // RECUPERAMOS EL USERNAME Y PASSWORD DEL OBJETO USER
             username = user.getUsername();
             password = user.getPassword();
 
@@ -67,6 +73,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
             Authentication authResult) throws IOException, ServletException {
 
+        // EN authResult ESTAN LOS DATOS DEL USUARIO QUE ASIGNE EN attemptAuthentication
+        // CREO UN OBJETO USER PERO DE SERCURITY NO ES USER ENTITY,
+
         String username = ((org.springframework.security.core.userdetails.User) authResult.getPrincipal())
                 .getUsername();
 
@@ -76,21 +85,38 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         claims.put("authorities", new ObjectMapper().writeValueAsString(roles));
         claims.put("isAdmin", isAdmin);
         claims.put("username", username);
+        claims.put("ar", "areafija");
+        claims.put("dt", "datafija");
+
+
+//        System.out.println(username);
+//        Optional<AdUsuario> o = repository.getUserByUsername("admin");
+//        if (!o.isPresent()) {
+//            throw new UsernameNotFoundException(String.format("Username %s no existe en el sistema!", username));
+//        }
+//        AdUsuario user = o.orElseThrow();
+
+//        Optional<AdUsuario> o = repository.getUserByUsuario(username);
+//        AdUsuario user = o.orElseThrow();
+//        System.out.println(user.getUsername());
 
         String token = Jwts.builder()
                 .setClaims(claims)
                 .setSubject(username)
-                .signWith(TokenJwtConfig.SECRET_KEY)
+                .signWith(SECRET_KEY)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 3600000))
                 .compact();
 
-        response.addHeader(TokenJwtConfig.HEADER_AUTHORIZATION, TokenJwtConfig.PREFIX_TOKEN + token);
+        response.addHeader(HEADER_AUTHORIZATION, PREFIX_TOKEN + token);
 
         Map<String, Object> body = new HashMap<>();
         body.put("token", token);
         body.put("message", String.format("Hola %s, has iniciado sesion con exito!", username));
         body.put("username", username);
+
+        // ASIGNO EL body en el response, convirtiendo el map a un json
+
         response.getWriter().write(new ObjectMapper().writeValueAsString(body));
         response.setStatus(200);
         response.setContentType("application/json");

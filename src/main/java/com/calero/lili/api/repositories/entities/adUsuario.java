@@ -2,35 +2,33 @@ package com.calero.lili.api.repositories.entities;
 
 import java.util.List;
 
-import com.calero.lili.api.models.IUser;
+import com.calero.lili.api.dtos.models.IUser;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-@Data
 @Entity
 @Table(name="adUsuarios")
-
-public class adUsuario implements IUser {
+@Data
+public class AdUsuario implements IUser {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    ////@Column(name = "idUsuario")
-    private Long id;
+    private Long idUsuario;
 
     @NotBlank
     @Size(min = 4, max = 8)
@@ -45,17 +43,26 @@ public class adUsuario implements IUser {
     @Column(unique = true)
     private String email;
 
-    @ManyToMany
-    @JoinTable(
-            name = "ad_usuarios_roles",
-            joinColumns = @JoinColumn(name="user_id"),
-            inverseJoinColumns = @JoinColumn(name="role_id"),
-            uniqueConstraints = { @UniqueConstraint(columnNames = {"user_id", "role_id"})})
+    @NotEmpty
+    private String idArea;
 
-    private List<adRol> roles;
+    @NotEmpty
+    @Column(name = "id_data")
+    private String idData;
 
     @Transient
     private boolean admin;
+
+    // ad_usuarios_roles NO SE VE AQUI EN LAS ENTITIES SOLO SE VE ESTA RELACION
+
+    @ManyToMany
+    @JoinTable(
+            name = "ad_usuarios_roles",
+            joinColumns = @JoinColumn(name="id_usuario"),
+            inverseJoinColumns = @JoinColumn(name="id_rol"),
+            uniqueConstraints = { @UniqueConstraint(columnNames = {"id_usuario", "id_rol"})})
+
+    private List<AdRol> roles;
 
 
 }

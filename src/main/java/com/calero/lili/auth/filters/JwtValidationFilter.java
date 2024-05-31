@@ -22,10 +22,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class JwtValidationFilter extends BasicAuthenticationFilter {
 
@@ -61,10 +61,8 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
             Object authoritiesClaims = claims.get("authorities");
             String username = claims.getSubject();
             Object username2 = claims.get("username");
-            System.out.println("jwtValidationFilter");
             System.out.println(username);
             System.out.println(username2);
-
 
             Collection<? extends GrantedAuthority> authorities = Arrays
                     .asList(new ObjectMapper()
@@ -76,7 +74,6 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
             chain.doFilter(request, response);
-            System.out.println(authorities);
         } catch (JwtException e) {
             Map<String, String> body = new HashMap<>();
             body.put("error", e.getMessage());
