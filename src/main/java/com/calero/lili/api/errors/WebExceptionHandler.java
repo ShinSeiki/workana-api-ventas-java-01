@@ -18,7 +18,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -74,7 +74,6 @@ public class WebExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(NOT_FOUND, error);
     }
 
-    @Override
     protected ResponseEntity handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         List<String> errorMessages = new ArrayList<>();
         errorMessages.addAll(ex.getBindingResult().getFieldErrors().stream().map(this::serialize).collect(Collectors.toList()));

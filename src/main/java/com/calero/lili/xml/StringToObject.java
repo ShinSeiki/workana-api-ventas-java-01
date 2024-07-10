@@ -2,10 +2,9 @@ package com.calero.lili.xml;
 
 import com.calero.lili.xml.factura.Factura;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.stream.StreamSource;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
 import java.io.StringReader;
 
 public class StringToObject {
@@ -156,8 +155,8 @@ public class StringToObject {
         try {
             jaxbContext1 = JAXBContext.newInstance(Factura.class);
             jaxbUnmarshaller1 = jaxbContext1.createUnmarshaller();
-            documento = (Factura) jaxbUnmarshaller1.unmarshal(new StreamSource(new StringReader(comprobante)));
-
+            //documento = (Factura) jaxbUnmarshaller1.unmarshal(new StreamSource(new StringReader(comprobante)));
+            documento = (Factura) jaxbUnmarshaller1.unmarshal(new StringReader(comprobante));
             System.out.println("Si se pudo leer el String y convertirlo en objeto Factura: "+documento.getInfoFactura().getComercioExterior());
         } catch (JAXBException ex) {
             //Logger.getLogger(Validar.class.getName()).log(Level.SEVERE, null, ex);

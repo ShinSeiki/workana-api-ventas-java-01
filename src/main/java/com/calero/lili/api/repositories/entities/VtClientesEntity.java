@@ -2,9 +2,12 @@ package com.calero.lili.api.repositories.entities;
 
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import lombok.*;
+
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import javax.persistence.*;
+import org.hibernate.type.SqlTypes;
+
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
@@ -14,7 +17,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "vt_clientes")
-@TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 
 public class VtClientesEntity implements Serializable{
 
@@ -43,7 +45,7 @@ public class VtClientesEntity implements Serializable{
     @Column(name = "tipo_cliente")
     private String tipoCliente;
 
-    @Type(type = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
     private List<Direccion> direcciones;
 

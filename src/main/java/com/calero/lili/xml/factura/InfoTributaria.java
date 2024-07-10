@@ -1,7 +1,7 @@
 package com.calero.lili.xml.factura;
 
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 
 @XmlRootElement // DEFINE RAIZ DEL DOC XML
 @XmlType(propOrder = {"ambiente", "tipoEmision", "razonSocial","nombreComercial","ruc","claveAcceso","codDoc","estab","ptoEmi","secuencial","dirMatriz", "contribuyenteRimpe", "agenteRetencion"}) // define el orden

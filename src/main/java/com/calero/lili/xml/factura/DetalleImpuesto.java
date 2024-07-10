@@ -1,6 +1,6 @@
 package com.calero.lili.xml.factura;
 
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlType;
 
 @XmlType(propOrder = {"codigo", "codigoPorcentaje", "tarifa", "baseImponibleReembolso", "impuestoReembolso"})
 public class DetalleImpuesto {

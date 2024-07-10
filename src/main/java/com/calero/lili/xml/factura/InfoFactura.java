@@ -1,8 +1,8 @@
 package com.calero.lili.xml.factura;
 
 import java.util.List;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlElementWrapper;
+import jakarta.xml.bind.annotation.XmlType;
 
 @XmlType(propOrder = {"fechaEmision", "dirEstablecimiento", "contribuyenteEspecial", "obligadoContabilidad","comercioExterior","incoTermFactura","lugarIncoTerm","paisOrigen","puertoEmbarque","puertoDestino","paisDestino","paisAdquisicion", "tipoIdentificacionComprador", "guiaRemision", "razonSocialComprador",  "identificacionComprador", "direccionComprador", "totalSinImpuestos", "totalDescuento", "totalImpuesto", "propina","fleteInternacional","seguroInternacional","gastosAduaneros","gastosTransporteOtros", "importeTotal", "moneda", "pago"}) // ,"pago"
 
