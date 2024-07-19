@@ -10,9 +10,15 @@
         <module name="app-lili" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="app-invoicing" target="1.8" />
+      <module name="backend-caleroapp" target="21" />
+      <module name="CaleroApp" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="app-invoicing" options="-parameters" />
       <module name="app-lili" options="-parameters" />
     </option>
   </component>
